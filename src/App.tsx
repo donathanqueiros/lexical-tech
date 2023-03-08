@@ -1,23 +1,15 @@
-import { $createLinkNode } from "@lexical/link";
-import { $createListItemNode, $createListNode } from "@lexical/list";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
-import { $createHeadingNode, $createQuoteNode } from "@lexical/rich-text";
-import { $createParagraphNode, $createTextNode, $getRoot } from "lexical";
 import * as React from "react";
 
 import { isDevPlayground } from "./appSettings";
-import { SettingsContext, useSettings } from "./context/SettingsContext";
+import { useSettings } from "./context/SettingsContext";
 import { SharedAutocompleteContext } from "./context/SharedAutocompleteContext";
 import { SharedHistoryContext } from "./context/SharedHistoryContext";
 import Editor from "./Editor";
 import logo from "./images/logo.svg";
 import PlaygroundNodes from "./nodes/PlaygroundNodes";
-import DocsPlugin from "./plugins/DocsPlugin";
 import PasteLogPlugin from "./plugins/PasteLogPlugin";
 import { TableContext } from "./plugins/TablePlugin";
-import TestRecorderPlugin from "./plugins/TestRecorderPlugin";
-import TypingPerfPlugin from "./plugins/TypingPerfPlugin";
-import Settings from "./Settings";
 import PlaygroundEditorTheme from "./themes/PlaygroundEditorTheme";
 
 function App(): JSX.Element {
@@ -48,12 +40,9 @@ function App(): JSX.Element {
             <div className="editor-shell">
               <Editor />
             </div>
-            <Settings />
-            {isDevPlayground ? <DocsPlugin /> : null}
             {isDevPlayground ? <PasteLogPlugin /> : null}
-            {isDevPlayground ? <TestRecorderPlugin /> : null}
 
-            {measureTypingPerf ? <TypingPerfPlugin /> : null}
+            <button>salvar</button>
           </SharedAutocompleteContext>
         </TableContext>
       </SharedHistoryContext>

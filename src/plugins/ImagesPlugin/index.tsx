@@ -103,6 +103,7 @@ export function InsertImageUploadedDialogBody({
     const reader = new FileReader();
     reader.onload = function () {
       if (typeof reader.result === "string") {
+        console.log(reader.result);
         setSrc(reader.result);
       }
       return "";
@@ -162,6 +163,7 @@ export function InsertImageDialog({
   }, [activeEditor]);
 
   const onClick = (payload: InsertImagePayload) => {
+    console.log(payload);
     activeEditor.dispatchCommand(INSERT_IMAGE_COMMAND, payload);
     onClose();
   };
@@ -226,6 +228,7 @@ export default function ImagesPlugin({
         INSERT_IMAGE_COMMAND,
         (payload) => {
           const imageNode = $createImageNode(payload);
+          console.log(imageNode);
           $insertNodes([imageNode]);
           if ($isRootOrShadowRoot(imageNode.getParentOrThrow())) {
             $wrapNodeInElement(imageNode, $createParagraphNode).selectEnd();
