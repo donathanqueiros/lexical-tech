@@ -41,6 +41,7 @@ import Button from "../../ui/Button";
 import { DialogActions, DialogButtonsList } from "../../ui/Dialog";
 import FileInput from "../../ui/FileInput";
 import TextInput from "../../ui/TextInput";
+import compressImage from "../../utils/compressImage";
 
 export type InsertImagePayload = Readonly<ImagePayload>;
 
@@ -99,7 +100,7 @@ export function InsertImageUploadedDialogBody({
 
   const isDisabled = src === "";
 
-  const loadImage = (files: FileList | null) => {
+  const loadImage = async (files: FileList | null) => {
     const reader = new FileReader();
     reader.onload = function () {
       if (typeof reader.result === "string") {
@@ -109,7 +110,9 @@ export function InsertImageUploadedDialogBody({
       return "";
     };
     if (files !== null) {
-      reader.readAsDataURL(files[0]);
+      const fileCompress = (await compressImage(files[0])) as Blob;
+      console.log(fileCompress);
+      reader.readAsDataURL(fileCompress);
     }
   };
 

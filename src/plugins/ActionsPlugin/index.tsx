@@ -8,34 +8,26 @@
 
 import type { LexicalEditor } from "lexical";
 
-import { $createCodeNode, $isCodeNode } from "@lexical/code";
 import { exportFile, importFile } from "@lexical/file";
-import {
-  $convertFromMarkdownString,
-  $convertToMarkdownString,
-} from "@lexical/markdown";
 import { useCollaborationContext } from "@lexical/react/LexicalCollaborationContext";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { mergeRegister } from "@lexical/utils";
 import { CONNECTED_COMMAND, TOGGLE_CONNECT_COMMAND } from "@lexical/yjs";
 import {
-  $createTextNode,
   $getRoot,
   $isParagraphNode,
   CLEAR_EDITOR_COMMAND,
   COMMAND_PRIORITY_EDITOR,
 } from "lexical";
 import * as React from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import useModal from "../../hooks/useModal";
 import Button from "../../ui/Button";
-import { PLAYGROUND_TRANSFORMERS } from "../MarkdownTransformers";
 import {
   SPEECH_TO_TEXT_COMMAND,
   SUPPORT_SPEECH_RECOGNITION,
 } from "../SpeechToTextPlugin";
-import { $isImageNode } from "../../nodes/ImageNode";
 
 async function sendEditorState(editor: LexicalEditor): Promise<void> {
   const stringifiedEditorState = JSON.stringify(editor.getEditorState());
@@ -137,27 +129,6 @@ export default function ActionsPlugin({
     );
   }, [editor, isEditable]);
 
-  const handleMarkdownToggle = useCallback(() => {
-    editor.update(() => {
-      const root = $getRoot();
-      const firstChild = root.getFirstChild();
-      if ($isCodeNode(firstChild) && firstChild.getLanguage() === "markdown") {
-        $convertFromMarkdownString(
-          firstChild.getTextContent(),
-          PLAYGROUND_TRANSFORMERS
-        );
-      } else {
-        const markdown = $convertToMarkdownString(PLAYGROUND_TRANSFORMERS);
-        root
-          .clear()
-          .append(
-            $createCodeNode("markdown").append($createTextNode(markdown))
-          );
-      }
-      root.selectEnd();
-    });
-  }, [editor]);
-
   return (
     <div className="actions">
       {SUPPORT_SPEECH_RECOGNITION && (
@@ -197,7 +168,7 @@ export default function ActionsPlugin({
       >
         <i className="export" />
       </button>
-      <button
+      {/* <button
         className="action-button clear"
         disabled={isEditorEmpty}
         onClick={() => {
@@ -209,7 +180,7 @@ export default function ActionsPlugin({
         aria-label="Clear editor contents"
       >
         <i className="clear" />
-      </button>
+      </button> */}
       <button
         className={`action-button ${!isEditable ? "unlock" : "lock"}`}
         onClick={() => {
@@ -223,14 +194,6 @@ export default function ActionsPlugin({
         aria-label={`${!isEditable ? "Unlock" : "Lock"} read-only mode`}
       >
         <i className={!isEditable ? "unlock" : "lock"} />
-      </button>
-      <button
-        className="action-button"
-        onClick={handleMarkdownToggle}
-        title="Convert From Markdown"
-        aria-label="Convert from markdown"
-      >
-        <i className="markdown" />
       </button>
       {isCollabActive && (
         <button
