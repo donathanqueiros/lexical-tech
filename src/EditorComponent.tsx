@@ -10,7 +10,7 @@ import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import { CharacterLimitPlugin } from "@lexical/react/LexicalCharacterLimitPlugin";
 import { CheckListPlugin } from "@lexical/react/LexicalCheckListPlugin";
 import { ClearEditorPlugin } from "@lexical/react/LexicalClearEditorPlugin";
-import { CollaborationPlugin } from "@lexical/react/LexicalCollaborationPlugin";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import { HashtagPlugin } from "@lexical/react/LexicalHashtagPlugin";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
@@ -22,9 +22,7 @@ import { TabIndentationPlugin } from "@lexical/react/LexicalTabIndentationPlugin
 import { TablePlugin } from "@lexical/react/LexicalTablePlugin";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { CAN_USE_DOM } from "@/shared/canUseDOM";
 
-import { createWebsocketProvider } from "./collaboration";
 import { useSettings } from "./context/SettingsContext";
 import { useSharedHistoryContext } from "./context/SharedHistoryContext";
 import TableCellNodes from "./nodes/TableCellNodes";
@@ -35,7 +33,6 @@ import ClickableLinkPlugin from "./plugins/ClickableLinkPlugin";
 import CodeActionMenuPlugin from "./plugins/CodeActionMenuPlugin";
 import CodeHighlightPlugin from "./plugins/CodeHighlightPlugin";
 import CollapsiblePlugin from "./plugins/CollapsiblePlugin";
-import CommentPlugin from "./plugins/CommentPlugin";
 import ComponentPickerPlugin from "./plugins/ComponentPickerPlugin";
 import DragDropPaste from "./plugins/DragDropPastePlugin";
 import DraggableBlockPlugin from "./plugins/DraggableBlockPlugin";
@@ -59,20 +56,16 @@ import TableCellResizer from "./plugins/TableCellResizer";
 import TableOfContentsPlugin from "./plugins/TableOfContentsPlugin";
 import { TablePlugin as NewTablePlugin } from "./plugins/TablePlugin";
 import ToolbarPlugin from "./plugins/ToolbarPlugin";
-import TreeViewPlugin from "./plugins/TreeViewPlugin";
+import { CAN_USE_DOM } from "./shared/canUseDOM";
 import PlaygroundEditorTheme from "./themes/PlaygroundEditorTheme";
 import ContentEditable from "./ui/ContentEditable";
 import Placeholder from "./ui/Placeholder";
 
-const skipCollaborationInit =
-  // @ts-ignore
-  window.parent != null && window.parent.frames.right === window;
-
-export default function Editor(): JSX.Element {
+export default function EditorComponent(): JSX.Element {
   const { historyState } = useSharedHistoryContext();
+
   const {
     settings: {
-      isCollab,
       isAutocomplete,
       isMaxLength,
       isCharLimit,
@@ -82,9 +75,7 @@ export default function Editor(): JSX.Element {
       showTableOfContents,
     },
   } = useSettings();
-  const text = isCollab
-    ? "Enter some collaborative rich text..."
-    : isRichText
+  const text = isRichText
     ? "Enter some rich text..."
     : "Enter some plain text...";
   const placeholder = <Placeholder>{text}</Placeholder>;
@@ -111,17 +102,17 @@ export default function Editor(): JSX.Element {
   useEffect(() => {
     const updateViewPortWidth = () => {
       const isNextSmallWidthViewport =
-        CAN_USE_DOM && window.matchMedia("(max-width: 1025px)").matches;
+        CAN_USE_DOM && window?.matchMedia("(max-width: 1025px)").matches;
 
       if (isNextSmallWidthViewport !== isSmallWidthViewport) {
         setIsSmallWidthViewport(isNextSmallWidthViewport);
       }
     };
 
-    window.addEventListener("resize", updateViewPortWidth);
+    window?.addEventListener("resize", updateViewPortWidth);
 
     return () => {
-      window.removeEventListener("resize", updateViewPortWidth);
+      window?.removeEventListener("resize", updateViewPortWidth);
     };
   }, [isSmallWidthViewport]);
 
@@ -145,20 +136,9 @@ export default function Editor(): JSX.Element {
         <KeywordsPlugin />
         <SpeechToTextPlugin />
         <AutoLinkPlugin />
-        <CommentPlugin
-          providerFactory={isCollab ? createWebsocketProvider : undefined}
-        />
         {isRichText ? (
           <>
-            {isCollab ? (
-              <CollaborationPlugin
-                id="main"
-                providerFactory={createWebsocketProvider}
-                shouldBootstrap={!skipCollaborationInit}
-              />
-            ) : (
-              <HistoryPlugin externalHistoryState={historyState} />
-            )}
+            <HistoryPlugin externalHistoryState={historyState} />
             <RichTextPlugin
               contentEditable={
                 <div className="editor-scroller">
@@ -234,7 +214,7 @@ export default function Editor(): JSX.Element {
         <div>{showTableOfContents && <TableOfContentsPlugin />}</div>
         <ActionsPlugin isRichText={isRichText} />
       </div>
-      {showTreeView && <TreeViewPlugin />}
+      {/* {showTreeView && <TreeViewPlugin />} */}
     </>
   );
 }

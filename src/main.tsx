@@ -1,10 +1,9 @@
 import "./setupEnv";
-import "./index.css";
 
 import * as React from "react";
 import { createRoot } from "react-dom/client";
 
-import App from "./App";
+import Editor from "./App";
 
 // Handle runtime errors
 const showErrorOverlay = (err: Event) => {
@@ -26,6 +25,6 @@ window.addEventListener("unhandledrejection", ({ reason }) =>
 
 createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <App />
+    <Editor />
   </React.StrictMode>
 );

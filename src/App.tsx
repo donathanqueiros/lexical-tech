@@ -1,52 +1,55 @@
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
-import * as React from "react";
 
-import { isDevPlayground } from "./appSettings";
-import { useSettings } from "./context/SettingsContext";
 import { SharedAutocompleteContext } from "./context/SharedAutocompleteContext";
 import { SharedHistoryContext } from "./context/SharedHistoryContext";
-import Editor from "./Editor";
-import logo from "./images/logo.svg";
+
 import PlaygroundNodes from "./nodes/PlaygroundNodes";
-import PasteLogPlugin from "./plugins/PasteLogPlugin";
 import { TableContext } from "./plugins/TablePlugin";
 import PlaygroundEditorTheme from "./themes/PlaygroundEditorTheme";
+import "./App.css";
+import EditorComponent from "./EditorComponent";
+import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
+import type { EditorState, LexicalEditor } from "lexical";
+import { useRef } from "react";
 
-function App(): JSX.Element {
-  const {
-    settings: { isCollab, emptyEditor, measureTypingPerf },
-  } = useSettings();
+export interface EditorProps {
+  onChange?: (value: string) => void;
+  initialValue?: string | object;
+}
 
+function Editor({ onChange, initialValue }: EditorProps): JSX.Element {
   const initialConfig = {
-    editorState: isCollab ? null : emptyEditor ? undefined : undefined,
-    namespace: "Playground",
+    namespace: "tech-quiz-editor",
     nodes: [...PlaygroundNodes],
+
     onError: (error: Error) => {
       throw error;
     },
     theme: PlaygroundEditorTheme,
+    editorState: JSON.stringify(initialValue),
   };
 
+  const editorRef = useRef<LexicalEditor>();
+
+  function onChangeIntern(editorState: EditorState, editor: LexicalEditor) {
+    onChange?.(JSON.stringify(editorState));
+  }
   return (
     <LexicalComposer initialConfig={initialConfig}>
       <SharedHistoryContext>
         <TableContext>
           <SharedAutocompleteContext>
-            <header>
-              <a href="https://lexical.dev" target="_blank" rel="noopener">
-                <img src={logo} alt="Lexical Logo" />
-              </a>
-            </header>
             <div className="editor-shell">
-              <Editor />
+              <EditorComponent />
+              <OnChangePlugin onChange={onChangeIntern} />
+              <OnChangePlugin
+                onChange={(_, editor) => (editorRef.current = editor)}
+              />
             </div>
-            {isDevPlayground ? <PasteLogPlugin /> : null}
-
-            <button>salvar</button>
           </SharedAutocompleteContext>
         </TableContext>
       </SharedHistoryContext>
     </LexicalComposer>
   );
 }
-export default App;
+export default Editor;
