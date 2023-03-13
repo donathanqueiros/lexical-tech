@@ -10,14 +10,14 @@ import "./App.css";
 import EditorComponent from "./EditorComponent";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import type { EditorState, LexicalEditor } from "lexical";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 
 export interface EditorProps {
   onChange?: (value: string) => void;
-  initialValue?: string | object;
+  value?: string;
 }
 
-function Editor({ onChange, initialValue }: EditorProps): JSX.Element {
+function Editor({ onChange, value }: EditorProps): JSX.Element {
   const initialConfig = {
     namespace: "tech-quiz-editor",
     nodes: [...PlaygroundNodes],
@@ -26,8 +26,16 @@ function Editor({ onChange, initialValue }: EditorProps): JSX.Element {
       throw error;
     },
     theme: PlaygroundEditorTheme,
-    editorState: JSON.stringify(initialValue),
+    editorState: value,
   };
+
+  useEffect(() => {
+    const editor = editorRef.current;
+    if (value && editor) {
+      const editorState = editor.parseEditorState(value);
+      editor.setEditorState(editorState);
+    }
+  }, [value]);
 
   const editorRef = useRef<LexicalEditor>();
 

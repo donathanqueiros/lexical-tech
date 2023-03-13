@@ -23,8 +23,27 @@ window.addEventListener("unhandledrejection", ({ reason }) =>
   showErrorOverlay(reason)
 );
 
+const Teste = () => {
+  const [value, setValue] = React.useState();
+
+  React.useEffect(() => {
+    console.log(value);
+  }, [value]);
+
+  return (
+    <>
+      <div style={{ background: "gray" }}>
+        <div style={{ width: "1280px", margin: "0 auto" }}>
+          <Editor value={value} />
+        </div>
+      </div>
+      <Editor onChange={setValue} />
+    </>
+  );
+};
+
 createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <Editor />
+    <Teste />
   </React.StrictMode>
 );
