@@ -10,7 +10,6 @@ import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import { CharacterLimitPlugin } from "@lexical/react/LexicalCharacterLimitPlugin";
 import { CheckListPlugin } from "@lexical/react/LexicalCheckListPlugin";
 import { ClearEditorPlugin } from "@lexical/react/LexicalClearEditorPlugin";
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import { HashtagPlugin } from "@lexical/react/LexicalHashtagPlugin";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
@@ -20,7 +19,6 @@ import { PlainTextPlugin } from "@lexical/react/LexicalPlainTextPlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { TabIndentationPlugin } from "@lexical/react/LexicalTabIndentationPlugin";
 import { TablePlugin } from "@lexical/react/LexicalTablePlugin";
-import * as React from "react";
 import { useEffect, useState } from "react";
 
 import { useSettings } from "./context/SettingsContext";

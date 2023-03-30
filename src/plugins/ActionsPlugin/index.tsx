@@ -185,9 +185,8 @@ export default function ActionsPlugin({
         className={`action-button ${!isEditable ? "unlock" : "lock"}`}
         onClick={() => {
           // Send latest editor state to commenting validation server
-          debugger;
           if (isEditable) {
-            sendEditorState(editor);
+            // sendEditorState(editor);
           }
           editor.setEditable(!editor.isEditable());
         }}

@@ -24,7 +24,7 @@ window.addEventListener("unhandledrejection", ({ reason }) =>
 );
 
 const Teste = () => {
-  const [value, setValue] = React.useState();
+  const [value, setValue] = React.useState("");
 
   React.useEffect(() => {
     console.log(value);
@@ -34,7 +34,7 @@ const Teste = () => {
     <>
       <div style={{ background: "gray" }}>
         <div style={{ width: "1280px", margin: "0 auto" }}>
-          <Editor value={value} />
+          <Editor value={value} readOnly />
         </div>
       </div>
       <Editor onChange={setValue} />
