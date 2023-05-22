@@ -49,7 +49,6 @@ function Editor({ onChange, value, readOnly }: EditorProps): JSX.Element {
   }, [value, editorRef.current]);
 
   useEffect(() => {
-    console.log("readOnly");
     const editor = editorRef.current;
     if (readOnly && editor) {
       editor.setEditable(!readOnly);
@@ -67,7 +66,7 @@ function Editor({ onChange, value, readOnly }: EditorProps): JSX.Element {
           <SettingsContext>
             <SharedAutocompleteContext>
               <div className="editor-shell">
-                <EditorComponent />
+                <EditorComponent readOnly={readOnly || false} />
                 <OnChangePlugin onChange={onChangeIntern} />
               </div>
             </SharedAutocompleteContext>

@@ -59,7 +59,11 @@ import PlaygroundEditorTheme from "./themes/PlaygroundEditorTheme";
 import ContentEditable from "./ui/ContentEditable";
 import Placeholder from "./ui/Placeholder";
 
-export default function EditorComponent(): JSX.Element {
+export default function EditorComponent({
+  readOnly,
+}: {
+  readOnly: boolean;
+}): JSX.Element {
   const { historyState } = useSharedHistoryContext();
 
   const {
@@ -116,7 +120,7 @@ export default function EditorComponent(): JSX.Element {
 
   return (
     <>
-      {isRichText && <ToolbarPlugin />}
+      {isRichText && !readOnly && <ToolbarPlugin />}
       <div
         className={`editor-container ${showTreeView ? "tree-view" : ""} ${
           !isRichText ? "plain-text" : ""
@@ -132,6 +136,7 @@ export default function EditorComponent(): JSX.Element {
         <EmojisPlugin />
         <HashtagPlugin />
         <KeywordsPlugin />
+
         <SpeechToTextPlugin />
         <AutoLinkPlugin />
         {isRichText ? (
@@ -210,7 +215,7 @@ export default function EditorComponent(): JSX.Element {
         )}
         {isAutocomplete && <AutocompletePlugin />}
         <div>{showTableOfContents && <TableOfContentsPlugin />}</div>
-        <ActionsPlugin isRichText={isRichText} />
+        {!readOnly && <ActionsPlugin isRichText={isRichText} />}
       </div>
       {/* {showTreeView && <TreeViewPlugin />} */}
     </>

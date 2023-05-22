@@ -1,5 +1,5 @@
 {
-  "version": "0.0.15",
+  "version": "0.0.16",
   "name": "@donathanqueiros/tech-quiz-editor",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/donathanqueiros"

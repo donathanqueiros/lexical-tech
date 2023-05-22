@@ -34,7 +34,7 @@ const Teste = () => {
     <>
       <div style={{ background: "gray" }}>
         <div style={{ width: "1280px", margin: "0 auto" }}>
-          <Editor value={value} readOnly />
+          <Editor value={undefined} readOnly />
         </div>
       </div>
       <Editor onChange={setValue} />
