@@ -1,5 +1,5 @@
 {
-  "version": "0.0.16",
+  "version": "0.0.20",
   "name": "@donathanqueiros/tech-quiz-editor",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/donathanqueiros"
@@ -11,7 +11,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "teste": " vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepublish": "vite build"
   },
   "dependencies": {
     "@excalidraw/excalidraw": "0.11.0",
